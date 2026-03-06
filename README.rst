@@ -72,7 +72,7 @@ OCI Security Zones で始めるセキュリティベストプラクティス
   cat <<EOF > config.oci.tfbackend
   bucket = "terraform-working"
   namespace = "テナンシに一意に付与されたネームスペース"
-  key = "oci-bastion-organize/terraform.tfstate"
+  key = "oci-security-zones-start-security-bestpractices/terraform.tfstate"
   auth = "SecurityToken"
   config_file_profile = "ADMIN"
   region = "ap-tokyo-1"
