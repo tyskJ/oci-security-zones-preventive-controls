@@ -17,7 +17,7 @@ OCI Security Zones で実現する予防的統制
 作業環境 - ローカル -
 =====================================================================
 * macOS Tahoe ( v26.3 )
-* Visual Studio Code 1.109.5
+* Visual Studio Code 1.111.0
 * Terraform v1.14.5
 * oci cli 3.71.0
 * Python 3.14.2
