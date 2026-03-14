@@ -10,3 +10,13 @@ data "oci_identity_regions" "regions" {
 #     r.key => r.name
 #   }, "NRT")
 # }
+
+/************************************************************
+Security Zones Maximum recipe
+************************************************************/
+data "oci_cloud_guard_security_recipes" "maximum" {
+  depends_on = [
+    oci_cloud_guard_cloud_guard_configuration.this
+  ]
+  compartment_id = var.tenancy_ocid
+}
