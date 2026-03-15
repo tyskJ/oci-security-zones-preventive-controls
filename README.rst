@@ -112,13 +112,26 @@ OCI Security Zones で実現する予防的統制
 
 後片付け - ローカル -
 =====================================================================
-1. 環境削除
+1. Security Zones 削除
+---------------------------------------------------------------------
+.. note::
+
+  * Cloud Guard を無効化する前に、Security Zonesを削除する必要があります
+  * Terraform では依存関係を満たせないので事前に削除します
+  * `security_zones.tf` 内のリソース全てをコメントアウトした状態で以下実行
+
+.. code-block:: bash
+
+  terraform apply --auto-approve
+
+
+2. 環境削除
 ---------------------------------------------------------------------
 .. code-block:: bash
 
   terraform destroy --auto-approve
 
-2. *tfstate* 用S3バケット削除
+3. *tfstate* 用S3バケット削除
 ---------------------------------------------------------------------
 .. code-block:: bash
 
@@ -126,56 +139,6 @@ OCI Security Zones で実現する予防的統制
   --bucket-name terraform-working \
   --force --empty \
   --profile ADMIN --auth security_token
-
-3. *Cloud Guard* 無効化
----------------------------------------------------------------------
-.. code-block:: bash
-
-  oci iam policy create \
-  --compartment-id ルートコンパートメントOCID \
-  --name cloudguard-read-tenancies-policy \
-  --description "Allow Cloud Guard service to read tenancies" \
-  --statements '[
-    "Allow service cloudguard to read tenancies in tenancy"
-  ]' \
-  --profile ADMIN \
-  --auth security_token
-
-.. note::
-
-  * ルートコンパートメントOCIDはご自身の環境の値に置き換えてください
-  * 有効化及び無効化時に、Cloud Guard にテナンシを読み取る権限がないとエラーになるためポリシーを作成している
-
-.. code-block:: bash
-
-  oci cloud-guard configuration update \
-  --compartment-id ルートコンパートメントOCID \
-  --reporting-region ap-tokyo-1 \
-  --status DISABLED \
-  --profile ADMIN \
-  --auth security_token
-
-.. note::
-
-  * ルートコンパートメントOCIDはご自身の環境の値に置き換えてください
-
-.. code-block:: bash
-
-  oci iam policy delete \
-  --policy-id $(oci iam policy list \
-    --compartment-id ルートコンパートメントOCID \
-    --name cloudguard-read-tenancies-policy \
-    --query "data[0].id" \
-    --raw-output \
-    --profile ADMIN \
-    --auth security_token) \
-  --force \
-  --profile ADMIN \
-  --auth security_token
-
-.. note::
-
-  * ルートコンパートメントOCIDはご自身の環境の値に置き換えてください
 
 番外編
 =====================================================================
