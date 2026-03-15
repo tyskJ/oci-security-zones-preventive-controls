@@ -36,3 +36,27 @@ resource "oci_cloud_guard_security_zone" "child" {
   description             = "Target Child Compartment attached custom security recipe"
   security_zone_recipe_id = oci_cloud_guard_security_recipe.this.id
 }
+
+/************************************************************
+local-exec
+************************************************************/
+resource "terraform_data" "remove_security_zones" {
+  depends_on = [
+    oci_cloud_guard_security_zone.root
+  ]
+  input = {
+    compartment_ocid = oci_identity_compartment.workload.id
+    security_zone_id = oci_cloud_guard_security_zone.root.id
+  }
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<EOT
+      oci cloud-guard security-zone remove \
+      --compartment-id ${self.input.compartment_ocid} \
+      --security-zone-id ${self.input.security_zone_id} \
+      --profile ADMIN \
+      --auth security_token
+      sleep 30
+    EOT
+  }
+}

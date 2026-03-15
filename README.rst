@@ -118,7 +118,7 @@ OCI Security Zones で実現する予防的統制
 
   * Cloud Guard を無効化する前に、Security Zonesを削除する必要があります
   * Terraform では依存関係を満たせないので事前に削除します
-  * `security_zones.tf` 内のリソース全てをコメントアウトした状態で以下実行
+  * ``security_zones.tf`` 内の ``oci_cloud_guard_security_zone.child`` をコメントアウトした状態で以下実行
 
 .. code-block:: bash
 
